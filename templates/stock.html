@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canteen Admin - Stock</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f8f8;
+        }
+
+        header {
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            text-align: right;
+        }
+
+        header img {
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+            cursor: pointer;
+        }
+
+        main {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        nav {
+            background-color: #555;
+            padding: 20px;
+            width: 200px;
+        }
+
+        nav button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #777;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            color: white;
+        }
+
+        nav button:hover {
+            background-color: #666;
+        }
+
+        .content-container {
+            flex: 1;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #333;
+            color: white;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .quantity-buttons {
+            display: flex;
+            align-items: center;
+        }
+
+        .quantity-input {
+            width: 50px;
+            text-align: center;
+            margin: 0 10px;
+        }
+
+        .update-button {
+            background-color: #000;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .add-dish-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <main>
+        <nav>
+            <button onclick="location.href='{{ url_for('stocktoorders') }}'">Orders</button>
+        </nav>
+
+        <div class="content-container">
+            <h1>Stock Management</h1>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Dish Name</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Corrected entries for Burger and Pizza -->
+                    <tr>
+                        <td>Burger</td>
+                        <td>$5.00</td>
+                        <td class="quantity-cell">10</td>
+                        <td class="action-cell">
+                            <button onclick="decrementQuantity(this)">-</button>
+                            <input type="text" class="quantity-input" value="10" disabled>
+                            <button onclick="incrementQuantity(this)">+</button>
+                            <button onclick="updateQuantityManually(this)" class="update-button">Update</button>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>Pizza</td>
+                        <td>$8.50</td>
+                        <td class="quantity-cell">15</td>
+                        <td class="action-cell">
+                            <button onclick="decrementQuantity(this)">-</button>
+                            <input type="text" class="quantity-input" value="15" disabled>
+                            <button onclick="incrementQuantity(this)">+</button>
+                            <button onclick="updateQuantityManually(this)" class="update-button">Update</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <button class="add-dish-button" onclick="addNewDish()">Add New Dish</button>
+        </div>
+    </main>
+
+
+    <script>
+        function incrementQuantity(button) {
+            const inputElement = button.parentNode.querySelector('.quantity-input');
+            const currentValue = parseInt(inputElement.value);
+            inputElement.value = currentValue + 1;
+        }
+
+        function decrementQuantity(button) {
+            const inputElement = button.parentNode.querySelector('.quantity-input');
+            const currentValue = parseInt(inputElement.value);
+            if (currentValue > 0) {
+                inputElement.value = currentValue - 1;
+            }
+        }
+
+        function updateQuantityManually(button) {
+            const inputElement = button.parentNode.querySelector('.quantity-input');
+            const newValue = parseInt(inputElement.value);
+
+            // Perform any additional logic needed when updating quantity manually
+
+            alert(`Quantity updated to: ${newValue}`);
+        }
+
+        function addNewDish() {
+            const dishName = prompt("Enter Dish Name:");
+            const price = prompt("Enter Price:");
+            const quantity = prompt("Enter Quantity:");
+
+            // Create a new row and fill it with the user-provided data
+            const tableBody = document.querySelector('tbody');
+
+            const newRow = document.createElement('tr');
+            const dishNameCell = document.createElement('td');
+            const priceCell = document.createElement('td');
+            const quantityCell = document.createElement('td');
+            const actionCell = document.createElement('td');
+
+            dishNameCell.textContent = dishName;
+            priceCell.textContent = `$${price}`;
+            quantityCell.textContent = quantity;
+
+            const quantityButtons = document.createElement('div');
+            quantityButtons.classList.add('quantity-buttons');
+
+            const decrementButton = document.createElement('button');
+            decrementButton.textContent = '-';
+            decrementButton.onclick = function() {
+                decrementQuantity(this);
+            };
+
+            const inputElement = document.createElement('input');
+            inputElement.type = 'text';
+            inputElement.classList.add('quantity-input');
+            inputElement.value = quantity;
+            inputElement.disabled = true;
+
+            const incrementButton = document.createElement('button');
+            incrementButton.textContent = '+';
+            incrementButton.onclick = function() {
+                incrementQuantity(this);
+            };
+
+            const updateButton = document.createElement('button');
+            updateButton.textContent = 'Update';
+            updateButton.classList.add('update-button');
+            updateButton.onclick = function() {
+                updateQuantityManually(this);
+            };
+
+            quantityButtons.appendChild(decrementButton);
+            quantityButtons.appendChild(inputElement);
+            quantityButtons.appendChild(incrementButton);
+            quantityButtons.appendChild(updateButton);
+
+            actionCell.appendChild(quantityButtons);
+
+            newRow.appendChild(dishNameCell);
+            newRow.appendChild(priceCell);
+            newRow.appendChild(quantityCell);
+            newRow.appendChild(actionCell);
+
+            tableBody.appendChild(newRow);
+        }
+    </script>
+
+</body>
+</html>

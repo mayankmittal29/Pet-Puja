@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>petpuja.ab.mm</title>
+    <link href="../static/login.css" rel="stylesheet">
+</head>
+    <body>
+        <div class="container">
+            <p><span class="typed-text" id="typee"></span><span class="cursor">&nbsp;</span></p>
+        </div>
+        <div class="box">
+            <span class="borderLine"></span>
+            <form id="loginForm" action="{{ url_for('login') }}" method="POST">
+
+                <h2>Sign in</h2>
+                <label style="color: white;" for="role">Choose your role</label>
+                <select name="role" id="role">
+                  <option value="Student">Student</option>
+                  <option value="CanteenAdmin">Canteen</option>
+                </select>
+                
+                <div class="inputBox">
+                    <p style="color: white;" >Enter your Roll number</p>
+                    <input type="number" required="required" id="id" name="id">
+                    <i></i>
+                </div>
+                <div class="inputBox">
+                    <p style="color: white;" >Enter your Password</p>
+                    <input type="password" required="required" id="password" name="password">
+                    <i></i>
+                </div>
+                <div class="links">
+                    <p style="color: white;">New user ?</p>
+                    <a href="/signup.html">Signup</a>
+                </div>
+                <input type="submit" value="Login">
+            </form>
+        </div>
+    
+        <!-- <script>
+            document.getElementById('loginForm').addEventListener('submit', function (event) {
+                event.preventDefault();
+                var username = document.getElementById("name").value;
+                var password = document.getElementById("password").value;
+    
+                // Use fetch API to send a POST request to the Flask endpoint
+                fetch("{{ url_for('login') }}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        username: username,
+                        password: password
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = "{{ url_for('index2') }}";
+                    } else {
+                        alert("Login Unsuccessful. Please check your credentials.");
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            });
+        </script>
+   -->
+
+  <script>
+        const typedTextSpan = document.querySelector(".typed-text");
+const cursorSpan = document.querySelector(".cursor");
+
+const textArray = ["Hello!", "Welcome to Pet Puja!"];
+const colorArr = ["#ff2770", "#45f3ff"];
+const typingDelay = 150;
+const erasingDelay = 150;
+const newTextDelay = 100; // Delay between current and next text
+let textArrayIndex = 0;
+let charIndex = 0;
+
+function type() {
+    
+  if (charIndex < textArray[textArrayIndex].length) {
+    if(!cursorSpan.classList.contains("typing")) cursorSpan.classList.add("typing");
+    typedTextSpan.textContent += textArray[textArrayIndex].charAt(charIndex);
+    typedTextSpan.style.color = colorArr[textArrayIndex];
+    charIndex++;
+    setTimeout(type, typingDelay);
+  } 
+  else {
+    cursorSpan.classList.remove("typing");
+  	setTimeout(erase, newTextDelay);
+  }
+}
+
+function erase() {
+	if (charIndex > 0) {
+    if(!cursorSpan.classList.contains("typing")) cursorSpan.classList.add("typing");
+    typedTextSpan.textContent = textArray[textArrayIndex].substring(0, charIndex-1);
+    charIndex--;
+    setTimeout(erase, erasingDelay);
+  } 
+  else {
+    cursorSpan.classList.remove("typing");
+    textArrayIndex++;
+    if(textArrayIndex>=textArray.length) textArrayIndex=0;
+    setTimeout(type, typingDelay + 1100);
+  }
+}
+
+document.addEventListener("DOMContentLoaded", function() { // On DOM Load initiate the effect
+  if(textArray.length) setTimeout(type, newTextDelay + 250);
+});
+      </script>
+
+</body>
+
+</html>
